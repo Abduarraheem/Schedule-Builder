@@ -26,6 +26,6 @@
   "scripts": {
     "serverStart": "node server.js",
     "dev": "nodemon server.js",
-    "start": "concurrently \"npm run dev\" \"cd frontend && npm start\" "
+    "start": "concurrently \"npm run dev\" \"cd .. && cd frontend && npm start\" "
   }
 }
