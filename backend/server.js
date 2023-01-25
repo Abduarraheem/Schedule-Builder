@@ -18,13 +18,14 @@ app.use(urlencodedParser, express.json());
 app.use(passport.initialize());
 
 //Env variables
-const PORT = process.env.PORT || 5000;
-
+const PORT = process.env.SERVER_PORT || 5000;
+const STATUS = process.env.NODE_ENV
+const DB_URI = process.env.DB_URI
 //Setup APIs
 app.use('/api/schedules', scheduleRoutes);
 
 //Serve static assets if in production
-if(process.env.NODE_ENV === 'production') {
+if(STATUS === 'production') {
   //Set static folder
   app.use(express.static('frontend/build'));
 
@@ -34,7 +35,7 @@ if(process.env.NODE_ENV === 'production') {
 }
 
 //Connect to database
-mongoose.connect(process.env.DB, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(DB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
 .then((res) => {
   console.log("Database connected");
 })
@@ -42,5 +43,5 @@ mongoose.connect(process.env.DB, {useNewUrlParser: true, useUnifiedTopology: tru
 
 //Log if server is up
 app.listen(PORT, () => {
-  console.log("App is running in", process.env.NODE_ENV, "mode on port", PORT);
+  console.log("App is running in", STATUS, "mode on port", PORT);
 });

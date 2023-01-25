@@ -1,9 +1,33 @@
 version: '3'
 services:
-  app:
+  # client application 
+  web:
     build: ./frontend
+    expose:
+      - ${CLIENT_PORT}
+    environment:
+      - CLIENT_PORT=${CLIENT_PORT}
     ports:
-      - 8080:80
+      - ${CLIENT_PORT}:${CLIENT_PORT}
+    links:
+      - backend
+    command: npm run start
+  
+  # server application 
+  backend:
+    build: ./backend
+    expose:
+      - ${SERVER_PORT}
+    environment:
+      - SERVER_PORT=${SERVER_PORT}
+      - NODE_ENV=${NODE_ENV}
+      - DB_URI=${DB_URI}
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    links:
+      - db
+    command: npm run dev
+
   db:
     image: mongo:latest
     ports:
