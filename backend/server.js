@@ -4,6 +4,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 import passport from 'passport'
+import scheduleRoutes from './routes/scheduleRoutes.js'
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ app.use(passport.initialize());
 const PORT = process.env.PORT || 5000;
 
 //Setup APIs
-
+app.use('/api/schedules', scheduleRoutes);
 
 //Serve static assets if in production
 if(process.env.NODE_ENV === 'production') {
