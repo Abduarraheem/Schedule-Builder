@@ -4,6 +4,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 import scheduleRoutes from './routes/scheduleRoutes.js'
+import classRepoRoutes from './routes/classRepoRoutes.js'
 
 // Allow referencing .env files
 dotenv.config();
@@ -23,6 +24,7 @@ const DB_URI = process.env.DB_URI
 
 // Setup APIs
 app.use('/api/schedules', scheduleRoutes);
+app.use('/api/classrepo', classRepoRoutes);
 
 // Serve static assets if in production
 if(STATUS === 'production') {
