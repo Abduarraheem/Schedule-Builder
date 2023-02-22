@@ -1,29 +1,30 @@
-import logo from './logo.svg';
 import './App.css';
-import Button from 'react-bootstrap/Button'
+import React, { Suspense } from 'react'
+import {BrowserRouter, Route, Routes} from 'react-router-dom'
+import Loader from './components/Loader'
+import ScheduleBuilder from './components/ScheduleBuilder';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <Button>
-          hey
-        </Button>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import RenderErrBoundary from './RenderErrBoundary'
+//import 'bootstrap/dist/css/bootstrap.min.css'
+
+class App extends React.Component {
+  componentDidMount() {
+    this.props.hideLoader();
+  }
+
+  render() {
+    return (
+      <BrowserRouter>
+        <RenderErrBoundary>
+          <Suspense fallback={<Loader size="big" />}>
+            <Routes>
+              <Route exact path="/" name="Landing Page" render={props => <ScheduleBuilder {...props} />} />
+            </Routes>
+          </Suspense>
+        </RenderErrBoundary>
+      </BrowserRouter>
+    );
+  }
 }
 
 export default App;
