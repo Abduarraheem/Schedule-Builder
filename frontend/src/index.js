@@ -5,6 +5,7 @@ import App from './App';
 import store from './app/store'
 import { Provider } from 'react-redux'
 import reportWebVitals from './reportWebVitals';
+import Calendar from './calendar';
 
 const loader = document.querySelector('.loader');
 
@@ -15,6 +16,7 @@ const hideLoader = () => loader.classList.add('loader--hide');
 
 ReactDOM.render(
   <React.StrictMode>
+    <Calendar/>
     <Provider store={store}>
       <App hideLoader={hideLoader} showLoader={showLoader} />
     </Provider>
