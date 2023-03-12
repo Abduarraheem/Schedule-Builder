@@ -4,9 +4,9 @@ const classRepoRouter = express.Router(); // Router handles all requests and res
 
 // Create addresses for each controller function
 classRepoRouter.route('/')
-.post(getClassRepo);
+.get(getClassRepo);
 
-classRepoRouter.route('/:category')
-.post(getClass);
+classRepoRouter.route('/getclass/')
+.get(getClass);
 
 export default classRepoRouter;

@@ -7,16 +7,16 @@ import {getClass, getClasses} from '../apis/classAPI.js'
 import './ClassSearch.css';
 
 const initialState = {
-	subject: null,
-	crn: null,
-	courseNo: null,
-	title: null,
-	credits: null,
-	instructor: null,
-	timedate: null,
-	seats: null,
-	location: null,
-	errors: null,
+	subject: "",
+	crn: "",
+	courseNo: "",
+	title: "",
+	credits: "",
+	instructor: "",
+	timedate: "",
+	seats: "",
+	location: "",
+	errors: "",
 }
 
 function reducer (state, action) {
@@ -60,7 +60,7 @@ const ClassSearch = () => {
 	const searchBtn = (e) => {
 		e.preventDefault();
 
-		if (Object.values(state).every(x => x === null || x === '')) {
+		if (Object.values(state).every(x => x === "" || x === '')) {
 			handleShow()
 		}
 		const searchInfo = {
@@ -73,11 +73,15 @@ const ClassSearch = () => {
 			timedate: timedate,
 			seats: seats,
 			location: location};
-		getClass(searchInfo);
+
+		console.log(searchInfo)
+
+		const classes = getClass(searchInfo)(reduxDispatch);
+		console.log(classes)
 	}
 	
 	const classesList = () => {
-		const classes = getClasses(reduxDispatch);
+		const classes = getClasses()(reduxDispatch);
 
 		return classes.map((c) => {
 			return <option value={c.subject}>c.subject</option>;
