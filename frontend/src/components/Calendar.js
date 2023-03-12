@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import CalendarDays from './calendar_day';
-import './calendar.css'
+import CalendarDays from './CalendarDay';
+import './Calendar.css'
 
 export default class Calendar extends Component {
     constructor() {

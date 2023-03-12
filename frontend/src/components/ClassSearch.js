@@ -1,27 +1,30 @@
-import './ClassSearch.css';
+import { useState, useReducer, useEffect } from 'react';
+import { useDispatch } from 'react-redux'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import {useDispatch} from 'react-redux'
+import Modal from 'react-bootstrap/Modal';
 import {getClass, getClasses} from '../apis/classAPI.js' 
-import {useReducer, useEffect} from 'react';
+import './ClassSearch.css';
 
 const initialState = {
-	subject: "",
-	crn: -1,
-	courseNo: -1,
-	title: "",
-	credits: -1,
-	instructor: "",
-	timedate: [],
-	seats: [],
-	location: "",
-	errors: {},
+	subject: null,
+	crn: null,
+	courseNo: null,
+	title: null,
+	credits: null,
+	instructor: null,
+	timedate: null,
+	seats: null,
+	location: null,
+	errors: null,
 }
 
 function reducer (state, action) {
 	switch(action.type) {
 		case "reset":
 			return initialState;
+		case "subject":
+			return { ...state, subject: action.payload }
 		case "crn":
 			return {...state, crn: action.payload}
 		case "courseNo":
@@ -37,28 +40,31 @@ function reducer (state, action) {
 			tempTD[action.index] = action.payload;
 			return {...state, timedate: tempTD}
 		case "seats":
-			const tempSeats = [...state.seats];
-			tempSeats[action.index] = action.payload;
-			return {...state, seats: tempSeats}
+			return { ...state, seats: action.payload }
 	  case "location":
 		return {...state, location: action.payload}
 	  default:
 		throw new Error("Error!");
 	}
 };
-function ClassSearch(){
+const ClassSearch = () => {
+	const [show, setShow] = useState(false);
 	const [state, dispatch] = useReducer(reducer, initialState);
-	const {crn, courseNo, title, credits, instructor, timedate, seats, location} = state;
+	const {subject, crn, courseNo, title, credits, instructor, timedate, seats, location} = state;
 	const reduxDispatch = useDispatch()
-	function searchData(e){
-		console.log(e.target);
-		console.log(e.target.value);
+
+	const searchData = (e) => {
 		dispatch({type: e.target.name, payload: e.target.value.trim()});
 	}
 	
-	function searchBtn(e){
+	const searchBtn = (e) => {
 		e.preventDefault();
-		const searchInfo = {        
+
+		if (Object.values(state).every(x => x === null || x === '')) {
+			handleShow()
+		}
+		const searchInfo = {
+			subject: subject,        
 			crn: crn,
 			courseNo: courseNo,
 			title: title,
@@ -70,33 +76,88 @@ function ClassSearch(){
 		getClass(searchInfo);
 	}
 	
-	function classesList(){
+	const classesList = () => {
 		const classes = getClasses(reduxDispatch);
-		console.log(classes)
+
 		return classes.map((c) => {
-			return <option value={c.title}>c.title</option>;
+			return <option value={c.subject}>c.subject</option>;
 		});
 	}
-	useEffect(() => {getClasses(reduxDispatch)}, []);
-	return (
-		<Form>
-			{/* <Form.Group>
-				<Form.Label>Subject: </Form.Label>
-				<Form.Select value={title} name="title" onChange={searchData}>
-					{classesList()}
-				</Form.Select>
-			</Form.Group> */}
-			
-			<Form.Group>
-				<Form.Label>Course Number: </Form.Label>
-				<Form.Select value={courseNo} name="courseNo" onChange={searchData}>
-				</Form.Select>
-			</Form.Group>
 
-			<Button variant="primary" type="submit" onClick={searchBtn}>
-				Search
-			</Button>
-		</Form>	
+	const handleShow = () => {
+		setShow(!show);
+	}
+
+	useEffect(() => {getClasses(reduxDispatch)}, []);
+
+	return (
+		<div>
+			<Form>
+				{/* <Form.Group>
+					<Form.Label>Subject: </Form.Label>
+					<Form.Select value={title} name="title" onChange={searchData}>
+						{classesList()}
+					</Form.Select>
+				</Form.Group> */}
+				<Form.Group>
+					<Form.Label>Department: </Form.Label>
+					<Form.Select value={subject} name="subject" onChange={searchData}>
+					</Form.Select>
+				</Form.Group>
+				<Form.Group>
+					<Form.Label>CRN: </Form.Label>
+					<Form.Control value={crn} name="crn" onChange={searchData}/>
+				</Form.Group>
+				<Form.Group>
+					<Form.Label>Course Number: </Form.Label>
+					<Form.Control value={courseNo} name="courseNo" onChange={searchData}/>
+				</Form.Group>
+				<Form.Group>
+					<Form.Label>Course Title: </Form.Label>
+					<Form.Control value={title} name="title" onChange={searchData}/>
+				</Form.Group>
+				<Form.Group>
+					<Form.Label>Credits: </Form.Label>
+					<Form.Control value={credits} name="credits" onChange={searchData}/>
+				</Form.Group>
+				<Form.Group>
+					<Form.Label>Instructor: </Form.Label>
+					<Form.Control value={instructor} name="instructor" onChange={searchData}/>
+				</Form.Group>
+				{/* <Form.Group>
+					<Form.Label>Course Number: </Form.Label>
+					<Form.Select value={courseNo} name="courseNo" onChange={searchData}>
+					</Form.Select>
+				</Form.Group> */}
+				<Form.Group>
+					<Form.Label>Open Seats Only: </Form.Label>
+					<Form.Check value={seats} name="seats" onChange={searchData}/>
+				</Form.Group>
+				<Form.Group>
+					<Form.Label>Location: </Form.Label>
+					<Form.Select value={location} name="location" onChange={searchData}>
+					</Form.Select>
+				</Form.Group>
+
+				<Button variant="primary" type="submit" onClick={searchBtn}>
+					Search
+				</Button>
+			</Form>
+			<Modal show={show} onHide={handleShow}>
+				<Modal.Header closeButton>
+				<Modal.Title>Warning</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>You haven't input anything in the search</Modal.Body>
+				<Modal.Footer>
+					<Button variant="secondary" onClick={handleShow}>
+					Close
+				</Button>
+					<Button variant="primary" onClick={handleShow}>
+					Proceed Anyways
+				</Button>
+				</Modal.Footer>
+			</Modal>
+		</div>
 	);
 }
 export default ClassSearch;
