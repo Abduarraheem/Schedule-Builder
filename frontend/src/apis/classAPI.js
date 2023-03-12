@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const getClasses = classRepo => dispatch => {
+export const getClasses = dispatch => {
 	return axios.
 	post('/api/classrepo/')
 	.then(res => {

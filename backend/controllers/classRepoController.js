@@ -6,6 +6,7 @@ import ClassRepo from '../models/classRepoModel.js'
 export const getClassRepo = asyncHandler(async (req, res) => {
     // If classRepo empty, return template class
     await ClassRepo.find({}, {
+        subject: 1,
         crn: 1,
         courseNo: 1,
         title: 1,

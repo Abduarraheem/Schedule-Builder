@@ -2,6 +2,10 @@ import mongoose from 'mongoose'
 
 // Define schedule schema and data types
 const classRepoSchema = mongoose.Schema({
+    subject:{
+        type: String,
+        required: true,
+    },
     crn: {
         type: Number,
         required: true,
