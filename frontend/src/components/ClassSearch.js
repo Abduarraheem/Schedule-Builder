@@ -1,9 +1,9 @@
 import { useState, useReducer, useEffect } from 'react';
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import {getClass, getClasses, getSubjects } from '../apis/classAPI.js' 
+import { getClass, getClasses, getSubjects } from '../apis/classAPI.js' 
 import './ClassSearch.css';
 
 const initialState = {
@@ -51,6 +51,7 @@ const ClassSearch = () => {
 	const [show, setShow] = useState(false);
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const {subject, crn, courseNo, title, credits, instructor, timedate, seats, location} = state;
+	const allSubjects = useSelector(state => state.class.allSubjects)
 	const reduxDispatch = useDispatch()
 
 	const searchData = (e) => {
@@ -74,17 +75,14 @@ const ClassSearch = () => {
 			seats: seats,
 			location: location};
 
-		console.log(searchInfo)
-
 		const classes = getClass(searchInfo)(reduxDispatch);
-		console.log(classes)
 	}
 	
 	const subjectList = () => {
-		const classes = getSubjects()(reduxDispatch);
-
-		return classes.map((c) => {
-			return <option value={c.department}>{c.department}</option>;
+		const subjects = allSubjects;
+		console.log(subjects)
+		return subjects.map(item => {
+			return <option value={item.dept}>{item.dept}</option>;
 		});
 	}
 
@@ -92,77 +90,86 @@ const ClassSearch = () => {
 		setShow(!show);
 	}
 
-	useEffect(() => {getSubjects()(reduxDispatch)}, []);
+	useEffect(() => {
+		getSubjects()(reduxDispatch);
+	}, []);
 
-	return (
-		<div>
-			<Form>
-				{/* <Form.Group>
+	if (Object.keys(allSubjects).length) {
+		return (
+			<div>
+				<Form>
+					{/* <Form.Group>
 					<Form.Label>Subject: </Form.Label>
 					<Form.Select value={title} name="title" onChange={searchData}>
 						{classesList()}
 					</Form.Select>
 				</Form.Group> */}
-				<Form.Group>
-					<Form.Label>Department: </Form.Label>
-					<Form.Select value={subject} name="subject" onChange={searchData}>
-						{/* {subjectList()} */}
-					</Form.Select>
-				</Form.Group>
-				<Form.Group>
-					<Form.Label>CRN: </Form.Label>
-					<Form.Control value={crn} name="crn" onChange={searchData}/>
-				</Form.Group>
-				<Form.Group>
-					<Form.Label>Course Number: </Form.Label>
-					<Form.Control value={courseNo} name="courseNo" onChange={searchData}/>
-				</Form.Group>
-				<Form.Group>
-					<Form.Label>Course Title: </Form.Label>
-					<Form.Control value={title} name="title" onChange={searchData}/>
-				</Form.Group>
-				<Form.Group>
-					<Form.Label>Credits: </Form.Label>
-					<Form.Control value={credits} name="credits" onChange={searchData}/>
-				</Form.Group>
-				<Form.Group>
-					<Form.Label>Instructor: </Form.Label>
-					<Form.Control value={instructor} name="instructor" onChange={searchData}/>
-				</Form.Group>
-				{/* <Form.Group>
+					<Form.Group>
+						<Form.Label>Department: </Form.Label>
+						<Form.Select value={subject} name="subject" onChange={searchData}>
+							<option value=""></option>
+							{subjectList()}
+						</Form.Select>
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>CRN: </Form.Label>
+						<Form.Control value={crn} name="crn" onChange={searchData} />
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Course Number: </Form.Label>
+						<Form.Control value={courseNo} name="courseNo" onChange={searchData} />
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Course Title: </Form.Label>
+						<Form.Control value={title} name="title" onChange={searchData} />
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Credits: </Form.Label>
+						<Form.Control value={credits} name="credits" onChange={searchData} />
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Instructor: </Form.Label>
+						<Form.Control value={instructor} name="instructor" onChange={searchData} />
+					</Form.Group>
+					{/* <Form.Group>
 					<Form.Label>Time and Date: </Form.Label>
 					<Form.Select value={timedate} name="courseNo" onChange={searchData}>
 					</Form.Select>
 				</Form.Group> */}
-				<Form.Group>
-					<Form.Label>Open Seats Only: </Form.Label>
-					<Form.Check value={seats} name="seats" onChange={searchData}/>
-				</Form.Group>
-				<Form.Group>
-					<Form.Label>Location: </Form.Label>
-					<Form.Select value={location} name="location" onChange={searchData}>
-					</Form.Select>
-				</Form.Group>
+					<Form.Group>
+						<Form.Label>Open Seats Only: </Form.Label>
+						<Form.Check value={seats} name="seats" onChange={searchData} />
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>Location: </Form.Label>
+						<Form.Select value={location} name="location" onChange={searchData}>
+						</Form.Select>
+					</Form.Group>
 
-				<Button variant="primary" type="submit" onClick={searchBtn}>
-					Search
-				</Button>
-			</Form>
-			<Modal show={show} onHide={handleShow}>
-				<Modal.Header closeButton>
-				<Modal.Title>Warning</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>You haven't input anything in the search</Modal.Body>
-				<Modal.Footer>
-					<Button variant="secondary" onClick={handleShow}>
-					Close
-				</Button>
-					<Button variant="primary" onClick={handleShow}>
-					Proceed Anyways
-				</Button>
-				</Modal.Footer>
-			</Modal>
-		</div>
-	);
+					<Button variant="primary" type="submit" onClick={searchBtn}>
+						Search
+					</Button>
+				</Form>
+				<Modal show={show} onHide={handleShow}>
+					<Modal.Header closeButton>
+						<Modal.Title>Warning</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>You haven't input anything in the search</Modal.Body>
+					<Modal.Footer>
+						<Button variant="secondary" onClick={handleShow}>
+							Close
+						</Button>
+						<Button variant="primary" onClick={handleShow}>
+							Proceed Anyways
+						</Button>
+					</Modal.Footer>
+				</Modal>
+			</div>
+		);
+	}
+	else {
+		return <div></div>
+	}
+	
 }
 export default ClassSearch;

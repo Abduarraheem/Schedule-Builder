@@ -35,7 +35,11 @@ def build_subjects(upload_type="db"):
 		subjects = {subject['value']: subject.text for subject in subjects_tag if subject != '\n'}
 		del subjects["%"] # delete 'not selected entry'.
 		if upload_type == "db":
-			db['subjects'].insert_many([subjects])
+			newSubjects = []
+			for attr, value in subjects.items():
+				newSubjects.append({"dept": value, "code": attr})
+
+			db['subjects'].insert_many(newSubjects)
 		else:
 			return subjects
 	except Exception as e:
@@ -43,7 +47,7 @@ def build_subjects(upload_type="db"):
 
 def main():
 	build_subjects()
-	# clear_subjects() # use if you want to clear all subject entries in the database.
+	#clear_subjects() # use if you want to clear all subject entries in the database.
 	
 if __name__ == '__main__':
 	main()

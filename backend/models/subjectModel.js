@@ -2,11 +2,15 @@ import mongoose from 'mongoose'
 
 // Define schedule schema and data types
 const subjectSchema = mongoose.Schema({
-    department: {
+    dept: {
         type: String,
         required: true,
-    }
-}, { collection: "subject", timestamps: true });
+    },
+    code: {
+        type: String,
+        required: true,
+    },
+}, { collection: "subjects", timestamps: true });
 
 const Subject = mongoose.model("Subject", subjectSchema);
 export default Subject;

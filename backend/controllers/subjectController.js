@@ -5,7 +5,8 @@ import Subject from '../models/subjectModel.js'
 export const getSubjects = asyncHandler(async (req, res) => {
     // If classRepo empty, return template class
     await Subject.find({}, {
-        department: 1
+        dept: 1,
+        code: 1
     }).then(subject => {
         res.json(subject);
     }).catch(err => console.log(err));
