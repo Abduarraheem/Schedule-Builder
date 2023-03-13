@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import {getClass, getClasses} from '../apis/classAPI.js' 
+import {getClass, getClasses, getSubjects } from '../apis/classAPI.js' 
 import './ClassSearch.css';
 
 const initialState = {
@@ -80,11 +80,11 @@ const ClassSearch = () => {
 		console.log(classes)
 	}
 	
-	const classesList = () => {
-		const classes = getClasses()(reduxDispatch);
+	const subjectList = () => {
+		const classes = getSubjects()(reduxDispatch);
 
 		return classes.map((c) => {
-			return <option value={c.subject}>c.subject</option>;
+			return <option value={c.department}>{c.department}</option>;
 		});
 	}
 
@@ -92,7 +92,7 @@ const ClassSearch = () => {
 		setShow(!show);
 	}
 
-	useEffect(() => {getClasses(reduxDispatch)}, []);
+	useEffect(() => {getSubjects()(reduxDispatch)}, []);
 
 	return (
 		<div>
@@ -106,6 +106,7 @@ const ClassSearch = () => {
 				<Form.Group>
 					<Form.Label>Department: </Form.Label>
 					<Form.Select value={subject} name="subject" onChange={searchData}>
+						{/* {subjectList()} */}
 					</Form.Select>
 				</Form.Group>
 				<Form.Group>
@@ -129,8 +130,8 @@ const ClassSearch = () => {
 					<Form.Control value={instructor} name="instructor" onChange={searchData}/>
 				</Form.Group>
 				{/* <Form.Group>
-					<Form.Label>Course Number: </Form.Label>
-					<Form.Select value={courseNo} name="courseNo" onChange={searchData}>
+					<Form.Label>Time and Date: </Form.Label>
+					<Form.Select value={timedate} name="courseNo" onChange={searchData}>
 					</Form.Select>
 				</Form.Group> */}
 				<Form.Group>
