@@ -31,7 +31,7 @@ const classRepoSchema = mongoose.Schema({
         required: true,
     },
     seats: {
-        type: Array,
+        type: Array, // [total, open]
         required: true,
     },
     location: {
