@@ -38,7 +38,6 @@ def build_subjects(upload_type="db"):
 			newSubjects = []
 			for attr, value in subjects.items():
 				newSubjects.append({"dept": value, "code": attr})
-
 			db['subjects'].insert_many(newSubjects)
 		else:
 			return subjects
