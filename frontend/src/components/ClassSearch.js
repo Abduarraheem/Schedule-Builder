@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { getClass, getClasses, getSubjects } from '../apis/classAPI.js' 
 import './ClassSearch.css';
+import { setResults } from '../slices/classSlice.js';
 
 const initialState = {
 	subject: "",
@@ -75,12 +76,15 @@ const ClassSearch = () => {
 			seats: seats,
 			location: location};
 
-		const classes = getClass(searchInfo)(reduxDispatch);
+		const results = getClass(searchInfo)(reduxDispatch);
+
+		if (results) {
+			reduxDispatch(setResults(results));
+		}
 	}
 	
 	const subjectList = () => {
 		const subjects = allSubjects;
-		console.log(subjects)
 		return subjects.map(item => {
 			return <option value={item.dept}>{item.dept}</option>;
 		});
